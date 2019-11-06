@@ -9,6 +9,7 @@ from datetime import datetime
 from collections import Counter
 from datetime import date
 from my_dictionary import my_dictionary
+from notify_run import Notify
 
 stockList = []
 buyList = my_dictionary()  
@@ -106,15 +107,21 @@ print topBuyList
 	
 #updateBoughtList
 newList = []
+SMS = ""
 
 #adding the new shares to be bought
 for item in topBuyList:
 	if item not in boughtList:
 		newList.append(item)
-	
+		SMS = SMS + str(item) + ','
 			
 #write new list to file
 with open('boughtList.txt', 'w') as f:
     for item in newList:
-        print >> f, item	
+        print >> f, item
+		
+		
+
+notify = Notify()
+notify.send(SMS)
 	
