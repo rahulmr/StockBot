@@ -73,11 +73,11 @@ def buyOrSell(item):
 		global buyList
 		
 		if avg50 > avg200:
-			print 'Adding '+item+' to buy list | 50d avg is '+str(avg50)+' | 200d avg is '+str(avg200)
+			#print 'Adding '+item)+' to buy list | 50d avg is '+str(avg50)+' | 200d avg is '+str(avg200)
 			buyList.add(item, avg50-avg200)
 		else:
 			if item in boughtList:
-				print 'Adding '+item+' to sell list | 50d avg is '+str(avg50)+' | 200d avg is '+str(avg200)
+				#print 'Adding '+str(item)+' to sell list | 50d avg is '+str(avg50)+' | 200d avg is '+str(avg200)
 				sellList.append(item)
 	except:
 		return
