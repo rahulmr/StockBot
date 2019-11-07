@@ -36,11 +36,13 @@ def inRange(time, days):
 
 #return average of value of the number of days specified
 def getAverage(data, days):
-	sum = 0.0;
+	sum = 0.0
+	count = 0
 	for row in data:
 		if inRange(row.get('_time'), days):
 			sum = sum + float(row.get('_value'))
-	return sum/days
+			count = count + 1;
+	return sum/count
 
 def readBoughtList():
 	#df = pd.read_excel('boughtList.xlsx', sheet_name=0) # can also index sheet by name or fetch all sheets
