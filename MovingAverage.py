@@ -11,6 +11,7 @@ from datetime import date
 from my_dictionary import my_dictionary
 from notify_run import Notify
 import os
+import xlrd
 
 stockList = []
 buyList = my_dictionary()  
@@ -20,6 +21,14 @@ boughtList = []
 
 today = date.today()
 
+def getName(item):
+	wb = xlrd.open_workbook('stock-unique.xlsx')
+	sheet = wb.sheet_by_index(0)
+	
+	for row_num in range(sheet.nrows):
+		row_value = sheet.row_values(row_num)
+		if row_value[0] == str(item):
+			return row_value[1]
 
 def deleteContent(fName):
     with open(fName, "w"):
@@ -55,7 +64,7 @@ def readBoughtList():
 
 #function to return list of stock names
 def readExcel():
-	df = pd.read_excel('stock-unique.xlsx', sheet_name=0, keep_default_na=False) # can also index sheet by name or fetch all sheets
+	df = pd.read_excel('stock-unique-dummy.xlsx', sheet_name=0, keep_default_na=False) # can also index sheet by name or fetch all sheets
 	stockList = df['id'].tolist() 
 	return stockList
 	
@@ -119,15 +128,21 @@ def main():
 	for item in topBuyList:
 		if item not in boughtList:
 			newList.append(item)
-			SMS = SMS + str(item) + ','
-				
+			SMS = SMS + getName(item) + ','
+	
+	deleteContent('boughtList.txt')
+	
+	#write previous unsold content to file
+	with open('boughtList.txt', 'w') as f:
+		for item in boughtList:
+			if item not in sellList:
+				print >> f, item
+	
 	#write new list to file
 	with open('boughtList.txt', 'w') as f:
 		for item in newList:
 			print >> f, item
 			
-			
-
 	notify = Notify()
 	notify.send(SMS)
 	
