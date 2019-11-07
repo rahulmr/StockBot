@@ -88,7 +88,7 @@ def buyOrSell(item):
 
 def main():
 	#main function
-	os.system("notify-run configure https://notify.run/hRtUrGQaxEM0l3VR")
+	os.system("notify-run configure -f https://notify.run/hRtUrGQaxEM0l3VR")
 	
 	#read list of all stock
 	stockList = readExcel()
