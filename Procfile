@@ -1,1 +1,1 @@
-web: python MovingAverage.py
+worker: python MovingAverage.py
