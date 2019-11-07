@@ -83,46 +83,49 @@ def buyOrSell(item):
 		return
 
 
+def main():
+	#main function
+	#read list of all stock
+	stockList = readExcel()
+		
+	#read boughtList
+	boughtList = readBoughtList()
 
-#main function
-#read list of all stock
-stockList = readExcel()
-	
-#read boughtList
-boughtList = readBoughtList()
+		
+	#Loop through all, add to topBuyList
+	for item in stockList:
+		print 'Stock is '+item
+		buyOrSell(item)
+		
+	#find top buy list
+	topBuyList = dict(Counter(buyList).most_common(5))
+		
+	#print buyList and SellList
+	print buyList
+	print 'Top shares to be bought are:'
+	print topBuyList
+	#print sellList
+		
+	#updateBoughtList
+	newList = []
+	SMS = ""
 
-	
-#Loop through all, add to topBuyList
-for item in stockList:
-	print 'Stock is '+item
-	buyOrSell(item)
-	
-#find top buy list
-topBuyList = dict(Counter(buyList).most_common(5))
-	
-#print buyList and SellList
-print buyList
-print 'Top shares to be bought are:'
-print topBuyList
-#print sellList
-	
-#updateBoughtList
-newList = []
-SMS = ""
-
-#adding the new shares to be bought
-for item in topBuyList:
-	if item not in boughtList:
-		newList.append(item)
-		SMS = SMS + str(item) + ','
+	#adding the new shares to be bought
+	for item in topBuyList:
+		if item not in boughtList:
+			newList.append(item)
+			SMS = SMS + str(item) + ','
+				
+	#write new list to file
+	with open('boughtList.txt', 'w') as f:
+		for item in newList:
+			print >> f, item
 			
-#write new list to file
-with open('boughtList.txt', 'w') as f:
-    for item in newList:
-        print >> f, item
-		
-		
+			
 
-notify = Notify()
-notify.send(SMS)
+	notify = Notify()
+	notify.send(SMS)
+	
+if __name__ == "__main__":
+    main()
 	
