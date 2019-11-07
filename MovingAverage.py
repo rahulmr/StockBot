@@ -10,6 +10,7 @@ from collections import Counter
 from datetime import date
 from my_dictionary import my_dictionary
 from notify_run import Notify
+import os
 
 stockList = []
 buyList = my_dictionary()  
@@ -87,6 +88,8 @@ def buyOrSell(item):
 
 def main():
 	#main function
+	os.system("notify-run configure https://notify.run/hRtUrGQaxEM0l3VR")
+	
 	#read list of all stock
 	stockList = readExcel()
 		
