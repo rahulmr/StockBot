@@ -4,3 +4,4 @@ pandas==0.22.0
 requests==2.20.0
 datetime==4.3
 notify_run==0.0.12
+xlrd==1.2.0
