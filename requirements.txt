@@ -1,0 +1,6 @@
+pprint==0.1
+numpy==1.14.0
+pandas==0.22.0
+requests==2.20.0
+datetime==4.3
+notify_run==0.0.12
