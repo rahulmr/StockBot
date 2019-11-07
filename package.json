@@ -1,0 +1,22 @@
+{
+  "name": "stock-bot",
+  "version": "1.0.0",
+  "description": "Node app for increasing the number of Instagram followers by unfollowing and following popular accounts periodically.",
+  "engines": {
+	"Python": "2.7.13"
+  },
+  "main": "MovingAverage.py",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "python MovingAverage.py"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sukrit1990/StockBot.git"
+  },
+  "author": "Sukrit Raghuvanshi",
+  "bugs": {
+    "url": "https://github.com/sukrit1990/StockBot/issues"
+  },
+  "devDependencies": {}
+}
