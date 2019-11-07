@@ -52,7 +52,7 @@ def readBoughtList():
 
 #function to return list of stock names
 def readExcel():
-	df = pd.read_excel('stock-unique.xlsx', sheet_name=0) # can also index sheet by name or fetch all sheets
+	df = pd.read_excel('stock-unique.xlsx', sheet_name=0, keep_default_na=False) # can also index sheet by name or fetch all sheets
 	stockList = df['id'].tolist() 
 	return stockList
 	
@@ -74,7 +74,7 @@ def buyOrSell(item):
 		
 		if avg50 > avg200:
 			print 'Adding '+item+' to buy list | 50d avg is '+str(avg50)+' | 200d avg is '+str(avg200)
-			buyList.add(item, avg50-avg200)
+			buyList.add(item, (avg50-avg200)/avg200)
 		else:
 			if item in boughtList:
 				print 'Adding '+item+' to sell list | 50d avg is '+str(avg50)+' | 200d avg is '+str(avg200)
@@ -101,6 +101,7 @@ for item in stockList:
 topBuyList = dict(Counter(buyList).most_common(5))
 	
 #print buyList and SellList
+print buyList
 print 'Top shares to be bought are:'
 print topBuyList
 #print sellList
