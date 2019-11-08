@@ -12,55 +12,13 @@ from my_dictionary import my_dictionary
 from notify_run import Notify
 import os
 import xlrd
+import utils
 
 stockList = []
 buyList = my_dictionary()  
 topBuyList = {}
-sellList = []
-boughtList = []
 
 today = date.today()
-
-def getName(item):
-	wb = xlrd.open_workbook('stock-unique.xlsx')
-	sheet = wb.sheet_by_index(0)
-	
-	for row_num in range(sheet.nrows):
-		row_value = sheet.row_values(row_num)
-		if row_value[0] == str(item):
-			return row_value[1]
-
-def deleteContent(fName):
-    with open(fName, "w"):
-        pass
-
-def inRange(time, days):
-	global today
-	#date = today.strftime("%d %b %Y")
-	date_object = datetime.strptime(time, '%d %b %Y').date()
-	delta = today - date_object;
-	if delta.days > days:
-		return 0
-	else:
-		return 1
-
-#return average of value of the number of days specified
-def getAverage(data, days):
-	sum = 0.0
-	count = 0
-	for row in data:
-		if inRange(row.get('_time'), days):
-			sum = sum + float(row.get('_value'))
-			count = count + 1;
-	return sum/count
-
-def readBoughtList():
-	#df = pd.read_excel('boughtList.xlsx', sheet_name=0) # can also index sheet by name or fetch all sheets
-	#boughtList = df['id'].tolist()
-	f = open('boughtList.txt', 'r')
-	boughtList = f.readlines()
-	f.close()
-	return boughtList
 
 #function to return list of stock names
 def readExcel():
@@ -78,22 +36,19 @@ def buyOrSell(item):
 	
 	try:
 	
-		avg200 = getAverage(data['graph']['values'], 200)
-		avg50 = getAverage(data['graph']['values'], 50)
+		avg200 = utils.getAverage(data['graph']['values'], 200)
+		avg50 = utils.getAverage(data['graph']['values'], 50)
 		currentPrice = float(data['graph']['current_close'])
 		print '200d price is '+str(avg200)+' | current price is '+str(currentPrice)+' | 50d avg is '+str(avg50)
 	
-		global sellList
 		global buyList
 		
 		if (avg50 > avg200) and (currentPrice < avg50):
 			print 'Adding '+item+' to buy list | 50d avg is '+str(avg50)+' | 200d avg is '+str(avg200)
 			buyList.add(item, (avg50-avg200)/avg200)
-		else:
-			if item in boughtList:
-				print 'Adding '+item+' to sell list | 50d avg is '+str(avg50)+' | 200d avg is '+str(avg200)
-				sellList.append(item)
-	except:
+			
+	except Exception as e:
+		print e
 		return
 
 
@@ -104,9 +59,6 @@ def main():
 	#read list of all stock
 	stockList = readExcel()
 		
-	#read boughtList
-	boughtList = readBoughtList()
-
 		
 	#Loop through all, add to topBuyList
 	for item in stockList:
@@ -118,33 +70,9 @@ def main():
 		
 	print 'Top shares to be bought are:'
 	print topBuyList
-	#print sellList
-		
-	#updateBoughtList
-	newList = []
-	SMS = ""
-
-	#adding the new shares to be bought
-	for item in topBuyList:
-		if item not in boughtList:
-			newList.append(item)
-			SMS = SMS + getName(item) + ','
 	
-	deleteContent('boughtList.txt')
+	utils.sendSMS('buy ', topBuyList)
 	
-	#write previous unsold content to file
-	with open('boughtList.txt', 'w') as f:
-		for item in boughtList:
-			if item not in sellList:
-				print >> f, item
-	
-	#write new list to file
-	with open('boughtList.txt', 'w') as f:
-		for item in newList:
-			print >> f, item
-			
-	notify = Notify()
-	notify.send(SMS)
 	
 if __name__ == "__main__":
     main()

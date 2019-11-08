@@ -12,7 +12,12 @@ def scheduled_job():
 @sched.scheduled_job('cron', day_of_week='mon-fri', hour=8, minute=40)
 def scheduled_job2():
 	MovingAverage.main()
-	print 'This job is run every weekday at 1:30 pm.'
+	print 'This job is run every weekday at 2:10 pm.'
+	
+@sched.scheduled_job('interval', minutes=30)
+def timed_job():
+	sell.main()
+	print('This job is run every ten minutes.')
 
 print 'Job is running now'
 sched.start()
