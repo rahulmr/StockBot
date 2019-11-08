@@ -114,8 +114,6 @@ def main():
 	#find top buy list
 	topBuyList = dict(Counter(buyList).most_common(5))
 		
-	#print buyList and SellList
-	print buyList
 	print 'Top shares to be bought are:'
 	print topBuyList
 	#print sellList
