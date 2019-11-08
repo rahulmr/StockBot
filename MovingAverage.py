@@ -64,7 +64,7 @@ def readBoughtList():
 
 #function to return list of stock names
 def readExcel():
-	df = pd.read_excel('stock-unique-dummy.xlsx', sheet_name=0, keep_default_na=False) # can also index sheet by name or fetch all sheets
+	df = pd.read_excel('stock-unique.xlsx', sheet_name=0, keep_default_na=False) # can also index sheet by name or fetch all sheets
 	stockList = df['id'].tolist() 
 	return stockList
 	

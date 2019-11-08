@@ -3,7 +3,7 @@ import MovingAverage
 
 sched = BlockingScheduler()
 
-@sched.scheduled_job('cron', day_of_week='mon-fri', hour=4, minute=15)
+@sched.scheduled_job('cron', day_of_week='mon-fri', hour=5)
 def scheduled_job():
 	MovingAverage.main()
 	print 'This job is run every weekday at 5pm.'
