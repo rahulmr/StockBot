@@ -80,11 +80,13 @@ def buyOrSell(item):
 	
 		avg200 = getAverage(data['graph']['values'], 200)
 		avg50 = getAverage(data['graph']['values'], 50)
+		currentPrice = float(data['graph']['current_close'])
+		print '200d price is '+str(avg200)+' | current price is '+str(currentPrice)+' | 50d avg is '+str(avg50)
 	
 		global sellList
 		global buyList
 		
-		if avg50 > avg200:
+		if (avg50 > avg200) and (currentPrice < avg50):
 			print 'Adding '+item+' to buy list | 50d avg is '+str(avg50)+' | 200d avg is '+str(avg200)
 			buyList.add(item, (avg50-avg200)/avg200)
 		else:
