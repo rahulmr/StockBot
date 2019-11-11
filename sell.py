@@ -38,7 +38,6 @@ def shouldSell(currentPrice, purchasePrice, purchaseDate):
 
 def main():
 	#main function
-	os.system("notify-run configure -f https://notify.run/hRtUrGQaxEM0l3VR")
 	headers = {'authorization': "Basic API Key Ommitted", 'accept': "application/json", 'accept': "text/csv"}
 
 	

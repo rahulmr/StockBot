@@ -1,0 +1,50 @@
+{"company_data":{"ratios":[{"type":"MAN","year":"2019","month":"March","item":[
+{"name":"Face Value","value":"2.00","head_flag":0}
+"name":"Dividend Per Share","value":"2.00","head_flag":0}
+"name":"Operating Profit Per Share (Rs)","value":"5.51","head_flag":0}
+"name":"Net Operating Profit Per Share (Rs)","value":"14.93","head_flag":0}
+"name":"Free Reserves Per Share (Rs)","value":"--","head_flag":0}
+"name":"Bonus in Equity Capital","value":"60.64","head_flag":0}
+"name":"Operating Profit Margin(%)","value":"36.93","head_flag":0}
+"name":"Profit Before Interest And Tax Margin(%)","value":"29.44","head_flag":0}
+"name":"Gross Profit Margin(%)","value":"33.14","head_flag":0}
+"name":"Cash Profit Margin(%)","value":"21.90","head_flag":0}
+"name":"Adjusted Cash Margin(%)","value":"21.90","head_flag":0}
+"name":"Net Profit Margin(%)","value":"20.86","head_flag":0}
+"name":"Adjusted Net Profit Margin(%)","value":"18.53","head_flag":0}
+"name":"Return On Capital Employed(%)","value":"5.69","head_flag":0}
+"name":"Return On Net Worth(%)","value":"3.52","head_flag":0}
+"name":"Adjusted Return on Net Worth(%)","value":"3.52","head_flag":0}
+"name":"Return on Assets Excluding Revaluations","value":"88.37","head_flag":0}
+"name":"Return on Assets Including Revaluations","value":"88.37","head_flag":0}
+"name":"Return on Long Term Funds(%)","value":"6.18","head_flag":0}
+"name":"Current Ratio","value":"1.92","head_flag":0}
+"name":"Quick Ratio","value":"1.01","head_flag":0}
+"name":"Debt Equity Ratio","value":"0.32","head_flag":0}
+"name":"Long Term Debt Equity Ratio","value":"0.25","head_flag":0}
+"name":"Interest Cover","value":"2.03","head_flag":0}
+"name":"Total Debt to Owners Fund","value":"0.32","head_flag":0}
+"name":"Financial Charges Coverage Ratio","value":"2.20","head_flag":0}
+"name":"Financial Charges Coverage Ratio Post Tax","value":"2.10","head_flag":0}
+"name":"Inventory Turnover Ratio","value":"0.29","head_flag":0}
+"name":"Debtors Turnover Ratio","value":"11.45","head_flag":0}
+"name":"Investments Turnover Ratio","value":"0.29","head_flag":0}
+"name":"Fixed Assets Turnover Ratio","value":"1.98","head_flag":0}
+"name":"Total Assets Turnover Ratio","value":"0.13","head_flag":0}
+"name":"Asset Turnover Ratio","value":"0.12","head_flag":0}
+"name":"Average Raw Material Holding","value":"--","head_flag":0}
+"name":"Average Finished Goods Held","value":"--","head_flag":0}
+"name":"Number of Days In Working Capital","value":"788.73","head_flag":0}
+"name":"Material Cost Composition","value":"--","head_flag":0}
+"name":"Imported Composition of Raw Materials Consumed","value":"--","head_flag":0}
+"name":"Selling Distribution Cost Composition","value":"1.46","head_flag":0}
+"name":"Expenses as Composition of Total Sales","value":"0.02","head_flag":0}
+"name":"Dividend Payout Ratio Net Profit","value":"20.76","head_flag":0}
+"name":"Dividend Payout Ratio Cash Profit","value":"17.56","head_flag":0}
+"name":"Earning Retention Ratio","value":"79.24","head_flag":0}
+"name":"Cash Earning Retention Ratio","value":"82.44","head_flag":0}
+"name":"AdjustedCash Flow Times","value":"7.64","head_flag":0}
+"name":"Earnings Per Share","value":"3.12","head_flag":0}
+"name":"Book Value","value":"88.37","head_flag":0}]}
+
+https://appfeeds.moneycontrol.com/jsonapi/stocks/ratios&format=%C2%A7ion=ratios&type=standalone&scid=D04

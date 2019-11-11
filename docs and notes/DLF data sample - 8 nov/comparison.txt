@@ -1,0 +1,20 @@
+{"id":"D04"
+"company_name":"DLF"
+"sc_full_name":"DLF"
+"lastprice":"203.20"
+"change":"10.75"
+"percentchange":"5.59"
+"direction":"1"
+"mktcap":"50298.33"
+"netsales":"3295.39"
+"netprofit":"687.60"
+"total_assets":"26458.78"
+"ft_high":"209.70"
+"ft_low":"133.90"
+"subsec":"Construction & Contracting - Real Estate"
+"dispid":"D04"}
+
+
+ - this information is available for all sector stocks
+
+https://appfeeds.moneycontrol.com//jsonapi//stocks//peer_comparison&format=&scid=D04

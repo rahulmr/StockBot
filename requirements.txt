@@ -6,3 +6,5 @@ datetime==4.3
 notify_run==0.0.12
 xlrd==1.2.0
 APScheduler==3.0.0
+xlsxwriter==1.2.4
+openpyxl==19.3.1

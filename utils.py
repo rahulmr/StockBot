@@ -16,6 +16,7 @@ import xlrd
 
 def sendSMS(message, itemList):
 	SMS = message
+	os.system("notify-run configure -f https://notify.run/hRtUrGQaxEM0l3VR")
 
 	#adding the new shares to be bought
 	for item in itemList:
@@ -29,7 +30,6 @@ def sendSMS(message, itemList):
 def readExcel(filename):
 	df = pd.read_excel(filename, sheet_name=0, keep_default_na=False) # can also index sheet by name or fetch all sheets
 	stockList = df
-	print df
 	return df
 
 
