@@ -17,7 +17,7 @@ import utils
 sellList = []
 
 def getAnnualReturn(currentPrice, purchasePrice, purchaseDate):
-	ROI  = currentPrice/purchasePrice
+	ROI  = currentPrice*.995/purchasePrice
 	today = date.today()
 	delta = today - purchaseDate;
 	deltaPer = float(delta.days + 1)/365.0
@@ -39,7 +39,7 @@ def shouldSell(currentPrice, purchasePrice, purchaseDate):
 def main():
 	#main function
 	headers = {'authorization': "Basic API Key Ommitted", 'accept': "application/json", 'accept': "text/csv"}
-
+	print "Running seller"
 	
 	df = utils.readExcel('boughtList.xlsx')
 	
