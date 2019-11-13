@@ -1,8 +1,17 @@
 from apscheduler.schedulers.blocking import BlockingScheduler
 import MovingAverage
+import os
+import logging
+import sell
+logging.basicConfig()
 
 sched = BlockingScheduler()
 
+
+@sched.scheduled_job('interval', minutes=10)
+def timed_job():
+	sell.main()
+	print('This job is run every ten minutes.')
 
 @sched.scheduled_job('cron', day_of_week='mon-fri', hour=4, minute=45)
 def scheduled_job():
@@ -18,11 +27,6 @@ def scheduled_job2():
 def scheduled_job2():
 	storeRatios.main()
 	print 'This job is run every weekday at 9:50 pm.'
-	
-@sched.scheduled_job('interval', minutes=30)
-def timed_job():
-	sell.main()
-	print('This job is run every ten minutes.')
 
 print 'Job is running now'
 sched.start()

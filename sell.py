@@ -26,13 +26,13 @@ def getAnnualReturn(currentPrice, purchasePrice, purchaseDate):
 
 def shouldSell(currentPrice, purchasePrice, purchaseDate):
 	#sell if annual return is more than 115%
-	if ((currentPrice - purchasePrice > 5) and getAnnualReturn(currentPrice, purchasePrice, purchaseDate)) > 1.15:
+	if (currentPrice - purchasePrice > 5) and (getAnnualReturn(currentPrice, purchasePrice, purchaseDate) > 1.15):
 		return 1
 	
 	#sell if annual return is less than 90%
-	if ((purchasePrice - currentPrice > 5) and getAnnualReturn(currentPrice, purchasePrice, purchaseDate)) < 0.9:
+	if (purchasePrice - currentPrice > 5) and (getAnnualReturn(currentPrice, purchasePrice, purchaseDate) < 0.9):
 		return 1
-		
+	
 	return 0
 	
 
@@ -54,6 +54,7 @@ def main():
 	if len(sellList) is not 0:
 		utils.sendSMS('sell ', sellList)
 	
+	print 'sell '+str(sellList)
 	
 if __name__ == "__main__":
     main()
