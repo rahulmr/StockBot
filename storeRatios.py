@@ -96,7 +96,7 @@ def getKey(ratio):
 
 def main():
 	#main function
-	
+	print 'Storing ratios'
 	
 	#read list of all stock
 	df = utils.readExcel('stock-unique.xlsx')
@@ -122,7 +122,7 @@ def main():
 		url = 'https://appfeeds.moneycontrol.com//jsonapi//stocks//graph&format=json&range=max&type=area&ex=&sc_id='+str(row['id'])
 		rcomp = requests.get(url, headers=headers)
 		data = json.loads(rcomp.text)
-		currentPrice = float(data['graph']['current_close'])
+		#currentPrice = float(data['graph']['current_close'])
 		
 		ratioUrl = 'https://appfeeds.moneycontrol.com//jsonapi//stocks//ratios&type=standalone&scid='+str(row['id'])
 		ratioComp = requests.get(ratioUrl, headers=headers)
@@ -142,7 +142,7 @@ def main():
 				if index == -1:
 					print str(ratio['name'])+':'+str(ratio['value'])
 				else:
-					row_data[index] = str(ratio['value'])
+					row_data[index] = (ratio['value']).replace(',', '')
 
 		
 			# Append Row Values

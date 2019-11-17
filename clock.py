@@ -3,6 +3,7 @@ import MovingAverage
 import os
 import logging
 import sell
+import storeRatios
 logging.basicConfig()
 
 sched = BlockingScheduler()
@@ -23,10 +24,10 @@ def scheduled_job2():
 	MovingAverage.main()
 	print 'This job is run every weekday at 2:10 pm.'
 	
-@sched.scheduled_job('cron', day_of_week='mon-fri', hour=4, minute=20)
+@sched.scheduled_job('cron', day_of_week='mon-fri', hour=18, minute=00)
 def scheduled_job2():
 	storeRatios.main()
-	print 'This job is run every weekday at 9:50 pm.'
+	print 'This job is run every weekday at 11:30 pm.'
 
 print 'Job is running now'
 sched.start()
