@@ -119,34 +119,37 @@ def main():
 	
 	#Loop through all, add to topBuyList
 	for index, row in df.iterrows():
-		url = 'https://appfeeds.moneycontrol.com//jsonapi//stocks//graph&format=json&range=max&type=area&ex=&sc_id='+str(row['id'])
-		rcomp = requests.get(url, headers=headers)
-		data = json.loads(rcomp.text)
-		#currentPrice = float(data['graph']['current_close'])
-		
-		ratioUrl = 'https://appfeeds.moneycontrol.com//jsonapi//stocks//ratios&type=standalone&scid='+str(row['id'])
-		ratioComp = requests.get(ratioUrl, headers=headers)
-		rData = json.loads(ratioComp.text)
-		
-		for item in rData['company_data']['ratios']:
-		
-			row_data = [None] * 70
-			row_data[0] = str(row['id'])
-			row_data[1] = str(row['Industry'])
-			row_data[2] = str(item['year'])
-			row_data[3] = str(item['month'])
+		try:
+			url = 'https://appfeeds.moneycontrol.com//jsonapi//stocks//graph&format=json&range=max&type=area&ex=&sc_id='+str(row['id'])
+			rcomp = requests.get(url, headers=headers)
+			data = json.loads(rcomp.text)
+			#currentPrice = float(data['graph']['current_close'])
+			print 'storing for '+str(row['id'])
+			ratioUrl = 'https://appfeeds.moneycontrol.com//jsonapi//stocks//ratios&type=standalone&scid='+str(row['id'])
+			ratioComp = requests.get(ratioUrl, headers=headers)
+			rData = json.loads(ratioComp.text)
 			
-			for ratio in item ['item']:
-				index = getKey(ratio['name'])
+			for item in rData['company_data']['ratios']:
+			
+				row_data = [None] * 70
+				row_data[0] = str(row['id'])
+				row_data[1] = str(row['Industry'])
+				row_data[2] = str(item['year'])
+				row_data[3] = str(item['month'])
 				
-				if index == -1:
-					print str(ratio['name'])+':'+str(ratio['value'])
-				else:
-					row_data[index] = (ratio['value']).replace(',', '')
+				for ratio in item ['item']:
+					index = getKey(ratio['name'])
+					
+					if index == -1:
+						print str(ratio['name'])+':'+str(ratio['value'])
+					else:
+						row_data[index] = (ratio['value']).replace(',', '')
 
-		
-			# Append Row Values
-			ws.append(row_data)
+			
+				# Append Row Values
+				ws.append(row_data)
+		except Exception as e:
+			print e
 
 		wb.save("Ratios.xlsx")
 

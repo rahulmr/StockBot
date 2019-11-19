@@ -32,17 +32,16 @@ def main():
 		df['Return On Capital Employed(%)'] = pd.to_numeric(df['Return On Capital Employed(%)'], errors='coerce')
 		df['Net Interest Income / Total Funds'] = pd.to_numeric(df['Net Interest Income / Total Funds'], errors='coerce')
 
-
-		# Drop NA values, listing the converted columns explicitly
-		#   so NA values in other columns aren't dropped
-		df.dropna(subset = ['Return On Net Worth(%)', 'Return On Capital Employed(%)', 'Net Interest Income / Total Funds'])
-		df2 = df.groupby(['Industry', 'Year', 'Month'], as_index=False)[item].median()
-		print df2
-		df2.to_excel(str(item).replace('/','-')+'.xlsx', sheet_name=str(count))
-		print item + " done"
-		count = count + 1
-		
-
+		try:
+			# Drop NA values, listing the converted columns explicitly
+			#   so NA values in other columns aren't dropped
+			df.dropna(subset = ['Return On Net Worth(%)', 'Return On Capital Employed(%)', 'Net Interest Income / Total Funds'])
+			df2 = df.groupby(['Industry', 'Year', 'Month'], as_index=False)[item].median()
+			df2.to_excel(str(item).replace('/','-')+'.xlsx', sheet_name=str(count))
+			print item + " done"
+			count = count + 1
+		except Exception as e:
+			print e 
 
 if __name__ == "__main__":
     main()

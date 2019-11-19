@@ -14,6 +14,20 @@ import os
 import xlrd
 
 
+def upsert(dic, key):
+	if dic.has_key(key):
+		dic[key] = dic[key] + 1
+	else:
+		dic[key] = 0
+	return dic
+
+def upsertAverage(dic, key, value, count):
+	if dic.has_key(key):
+		dic[key] = (dic[key]*(count-1)+value)/count
+	else:
+		dic[key] = value
+	return dic
+
 def sendSMS(message, itemList):
 	SMS = message
 	os.system("notify-run configure -f https://notify.run/hRtUrGQaxEM0l3VR")
@@ -71,3 +85,19 @@ def getShareName(item):
 		row_value = sheet.row_values(row_num)
 		if row_value[0] == str(item):
 			return row_value[1]
+			
+def monthToNum(month):
+	return{
+		'January' : 1,
+		'February' : 2,
+		'March' : 3,
+		'April' : 4,
+		'May' : 5,
+		'June' : 6,
+		'July' : 7,
+		'August' : 8,
+		'September' : 9, 
+		'October' : 10,
+		'November' : 11,
+		'December' : 12
+}[month]
