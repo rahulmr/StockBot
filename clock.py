@@ -4,6 +4,7 @@ import os
 import logging
 import sell
 import storeRatios
+import Median
 logging.basicConfig()
 
 sched = BlockingScheduler()
@@ -28,6 +29,11 @@ def scheduled_job2():
 def scheduled_job2():
 	storeRatios.main()
 	print 'This job is run every weekday at 11:30 pm.'
+	
+@sched.scheduled_job('cron', day_of_week='mon-fri', hour=20, minute=00)
+def scheduled_job2():
+	Median.main()
+	print 'This job is run every weekday at 1:30 am.'
 
 print 'Job is running now'
 sched.start()
