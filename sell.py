@@ -21,7 +21,7 @@ def getAnnualReturn(currentPrice, purchasePrice, purchaseDate):
 	today = date.today()
 	delta = today - purchaseDate;
 	deltaPer = float(delta.days + 1)/365.0
-	return ROI/deltaPer
+	return pow(ROI,1/deltaPer)
 
 
 def shouldSell(currentPrice, purchasePrice, purchaseDate):
@@ -30,7 +30,7 @@ def shouldSell(currentPrice, purchasePrice, purchaseDate):
 		return 1
 	
 	#sell if annual return is less than 90%
-	if (purchasePrice - currentPrice > 5) and (getAnnualReturn(currentPrice, purchasePrice, purchaseDate) < 0.9):
+	if (purchasePrice - currentPrice > 5) and (getAnnualReturn(currentPrice, purchasePrice, purchaseDate) < 0.9) and (currentPrice > 20.0):
 		return 1
 	
 	return 0
@@ -44,6 +44,7 @@ def main():
 	df = utils.readExcel('boughtList.xlsx')
 	
 	for index, row in df.iterrows():
+		print 'Running for '+ str(row['Name'])
 		url = 'https://appfeeds.moneycontrol.com//jsonapi//stocks//graph&format=json&range=max&type=area&ex=&sc_id='+str(row['Name'])
 		rcomp = requests.get(url, headers=headers)
 		data = json.loads(rcomp.text)
