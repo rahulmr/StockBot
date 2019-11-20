@@ -11,10 +11,16 @@ logging.basicConfig()
 sched = BlockingScheduler()
 
 
-@sched.scheduled_job('interval', minutes=10)
-def timed_job():
+#@sched.scheduled_job('interval', minutes=10)
+#def timed_job():
+#	sell.main()
+#	print('This job is run every ten minutes.')
+
+@sched.scheduled_job('cron', day_of_week='mon-fri', hour=4, minute=55)
+def scheduled_job():
 	sell.main()
-	print('This job is run every ten minutes.')
+	print 'This job is run every weekday at 10:25 am.'
+
 
 @sched.scheduled_job('cron', day_of_week='mon-fri', hour=4, minute=45)
 def scheduled_job():
