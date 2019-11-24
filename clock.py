@@ -22,15 +22,15 @@ def scheduled_job():
 	print 'This job is run every weekday at 10:25 am.'
 
 
-@sched.scheduled_job('cron', day_of_week='mon-fri', hour=4, minute=45)
-def scheduled_job():
+@sched.scheduled_job('cron', day_of_week='mon-fri', hour=3, minute=45)
+def scheduled_job1():
 	ScoreBuyStocks.main()
-	print 'This job is run every weekday at 10:15 am.'
+	print 'This job is run every weekday at 9:15 am.'
 	
-@sched.scheduled_job('cron', day_of_week='mon-fri', hour=8, minute=40)
+@sched.scheduled_job('cron', day_of_week='mon-fri', hour=7, minute=40)
 def scheduled_job2():
 	ScoreBuyStocks.main()
-	print 'This job is run every weekday at 2:10 pm.'
+	print 'This job is run every weekday at 1:10 pm.'
 	
 @sched.scheduled_job('cron', day_of_week='mon-fri', hour=18, minute=30)
 def scheduled_job3():
