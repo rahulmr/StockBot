@@ -93,7 +93,8 @@ def getEpsScore(share, currentPrice):
 					return 0.0
 			except Exception as e:
 				print e 
-		
+				return 0.0
+	return 0.0	
 
 def getTrendScore(data):
 	try:
@@ -152,15 +153,15 @@ def main():
 			
 			#give trend score
 			trendScore = getTrendScore(data)
-			
+			print trendScore
 			#give industry change score
 			industryScore = (averageList[str(row['Industry'])] - 0.9)*(0.5 + positiveList[str(row['Industry'])])
-			
+			print industryScore
 			#give ratio median score
 			medianScore = getMedianScore(str(row['id']), str(row['Industry']))
-			
+			print medianScore
 			epsScore = getEpsScore(str(row['id']), currentPrice)
-			
+			print epsScore
 			total = trendScore + industryScore + medianScore + epsScore
 			
 			print 'Trendscore: '+str(trendScore)+ '| Industry score: '+str(industryScore)+'| Median Score '+str(medianScore)+ '|EPS Score '+str(epsScore)+'| Total '+str(total) 
