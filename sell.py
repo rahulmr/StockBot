@@ -30,7 +30,7 @@ def shouldSell(currentPrice, purchasePrice, purchaseDate):
 		return 1
 	
 	#sell if annual return is less than 90%
-	if (purchasePrice - currentPrice > 5) and (getAnnualReturn(currentPrice, purchasePrice, purchaseDate) < 0.9) and (currentPrice > 20.0):
+	if (purchasePrice - currentPrice > 5) and (getAnnualReturn(currentPrice, purchasePrice, purchaseDate) < 0.9) and (currentPrice > 50.0):
 		return 1
 	
 	return 0
