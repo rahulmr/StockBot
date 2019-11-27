@@ -82,14 +82,14 @@ def getKey(ratio):
 		'Interest Expended / Capital Employed(%)':59,
 		'Total Income / Capital Employed(%)':60,
 		'Interest Spread': 61,
-		'Return on Long Term Fund(%)':62,
-		'Interest Income / Total Funds':63,
-		'Net Interest Income / Total Funds':64,
-		'Non Interest Income / Total Funds':65,
-		'Interest Expended / Total Funds':66,
-		'Operating Expense / Total Funds':67,
-		'Profit Before Provisions / Total Funds':68,
-		'Net Profit / Total Funds':69
+		'Interest Income / Total Funds':62,
+		'Net Interest Income / Total Funds':63,
+		'Non Interest Income / Total Funds':64,
+		'Interest Expended / Total Funds':65,
+		'Operating Expense / Total Funds':66,
+		'Profit Before Provisions / Total Funds':67,
+		'Net Profit / Total Funds':68,
+		'PE ratio':69
 	}
 	return switcher.get(ratio, -1)
 
@@ -106,7 +106,7 @@ def main():
 	dataDf = pd.DataFrame(index=['id'], columns=['currentPrice', 'ratioData', 'industry'])
 
 	wb = load_workbook("Ratios.xlsx")
-	wbHeaders = ['Share', 'Industry', 'Year', 'Month','Face Value','Dividend Per Share','Operating Profit Per Share (Rs)','Net Operating Profit Per Share (Rs)','Free Reserves Per Share (Rs)', 'Bonus in Equity Capital','Operating Profit Margin(%)','Profit Before Interest And Tax Margin(%)',	'Gross Profit Margin(%)','Cash Profit Margin(%)','Adjusted Cash Margin(%)','Net Profit Margin(%)','Adjusted Net Profit Margin(%)','Return On Capital Employed(%)','Return On Net Worth(%)','Adjusted Return on Net Worth(%)','Return on Assets Excluding Revaluations','Return on Assets Including Revaluations','Return on Long Term Funds(%)','Current Ratio','Quick Ratio','Debt Equity Ratio','Long Term Debt Equity Ratio','Interest Cover','Total Debt to Owners Fund','Financial Charges Coverage Ratio','Financial Charges Coverage Ratio Post Tax','Inventory Turnover Ratio',	'Debtors Turnover Ratio','Investments Turnover Ratio', 'Fixed Assets Turnover Ratio','Total Assets Turnover Ratio','Asset Turnover Ratio', 'Average Raw Material Holding', 'Average Finished Goods Held', 'Number of Days In Working Capital','Material Cost Composition','Imported Composition of Raw Materials Consumed',	'Selling Distribution Cost Composition','Expenses as Composition of Total Sales', 'Dividend Payout Ratio Net Profit', 'Dividend Payout Ratio Cash Profit', 'Earning Retention Ratio', 'Cash Earning Retention Ratio', 'AdjustedCash Flow Times', 'Earnings Per Share', 'Book Value','Cash Deposit Ratio', 'Investment Deposit Ratio', 'Credit Deposit Ratio', 'Advances / Loans Funds(%)', 'Capital Adequacy Ratio', 'Operating Expense / Total Income', 'Other Income / Total Income', 'Interest Expended / Interest Earned', 'Interest Expended / Capital Employed(%)', 'Total Income / Capital Employed(%)', 'Interest Spread','Interest Income / Total Funds','Net Interest Income / Total Funds','Non Interest Income / Total Funds','Interest Expended / Total Funds', 'Operating Expense / Total Funds', 'Profit Before Provisions / Total Funds','Net Profit / Total Funds']
+	wbHeaders = ['Share', 'Industry', 'Year', 'Month','Face Value','Dividend Per Share','Operating Profit Per Share (Rs)','Net Operating Profit Per Share (Rs)','Free Reserves Per Share (Rs)', 'Bonus in Equity Capital','Operating Profit Margin(%)','Profit Before Interest And Tax Margin(%)',	'Gross Profit Margin(%)','Cash Profit Margin(%)','Adjusted Cash Margin(%)','Net Profit Margin(%)','Adjusted Net Profit Margin(%)','Return On Capital Employed(%)','Return On Net Worth(%)','Adjusted Return on Net Worth(%)','Return on Assets Excluding Revaluations','Return on Assets Including Revaluations','Return on Long Term Funds(%)','Current Ratio','Quick Ratio','Debt Equity Ratio','Long Term Debt Equity Ratio','Interest Cover','Total Debt to Owners Fund','Financial Charges Coverage Ratio','Financial Charges Coverage Ratio Post Tax','Inventory Turnover Ratio',	'Debtors Turnover Ratio','Investments Turnover Ratio', 'Fixed Assets Turnover Ratio','Total Assets Turnover Ratio','Asset Turnover Ratio', 'Average Raw Material Holding', 'Average Finished Goods Held', 'Number of Days In Working Capital','Material Cost Composition','Imported Composition of Raw Materials Consumed',	'Selling Distribution Cost Composition','Expenses as Composition of Total Sales', 'Dividend Payout Ratio Net Profit', 'Dividend Payout Ratio Cash Profit', 'Earning Retention Ratio', 'Cash Earning Retention Ratio', 'AdjustedCash Flow Times', 'Earnings Per Share', 'Book Value','Cash Deposit Ratio', 'Investment Deposit Ratio', 'Credit Deposit Ratio', 'Advances / Loans Funds(%)', 'Capital Adequacy Ratio', 'Operating Expense / Total Income', 'Other Income / Total Income', 'Interest Expended / Interest Earned', 'Interest Expended / Capital Employed(%)', 'Total Income / Capital Employed(%)', 'Interest Spread','Interest Income / Total Funds','Net Interest Income / Total Funds','Non Interest Income / Total Funds','Interest Expended / Total Funds', 'Operating Expense / Total Funds', 'Profit Before Provisions / Total Funds','Net Profit / Total Funds', 'PE Ratio']
 	
 	
 	# Select First Worksheet
@@ -123,7 +123,7 @@ def main():
 			url = 'https://appfeeds.moneycontrol.com//jsonapi//stocks//graph&format=json&range=max&type=area&ex=&sc_id='+str(row['id'])
 			rcomp = requests.get(url, headers=headers)
 			data = json.loads(rcomp.text)
-			#currentPrice = float(data['graph']['current_close'])
+			currentPrice = float(data['graph']['current_close'])
 			print 'storing for '+str(row['id'])
 			ratioUrl = 'https://appfeeds.moneycontrol.com//jsonapi//stocks//ratios&type=standalone&scid='+str(row['id'])
 			ratioComp = requests.get(ratioUrl, headers=headers)
@@ -142,6 +142,9 @@ def main():
 					
 					if index == -1:
 						print str(ratio['name'])+':'+str(ratio['value'])
+					if index == 49:
+						row_data[index] = (ratio['value']).replace(',', '')
+						row_data[69] = currentPrice/float((ratio['value']).replace(',', ''))
 					else:
 						row_data[index] = (ratio['value']).replace(',', '')
 
