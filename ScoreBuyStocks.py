@@ -28,6 +28,7 @@ ROCAdf =  utils.readExcel('Return On Capital Employed(%).xlsx')
 NIdf =  utils.readExcel('Net Interest Income - Total Funds.xlsx')
 DIdf = utils.readExcel('Dividend Payout Ratio Net Profit.xlsx')
 Ratiodf = utils.readExcel('Ratios.xlsx')
+PEdf = utils.readExcel('PE Ratio.xlsx')
 buyList = my_dictionary()  
 topBuyList = {}
 
@@ -39,7 +40,8 @@ def getdfMap(ratio):
 		'Return On Capital Employed(%)': ROCAdf,
 		'Net Interest Income / Total Funds': NIdf,
 		'Earnings Per Share':Ratiodf,
-		'Dividend Payout Ratio Net Profit':DIdf
+		'Dividend Payout Ratio Net Profit':DIdf,
+		'PE Ratio':PEdf
 }[ratio]
 
 
@@ -79,22 +81,35 @@ def getMedianScore(share, industry):
 	
 	return score * 0.25
 	
-def getEpsScore(share, currentPrice):
+def getPEScore(share, currentPrice, industry):
+	year = 0
+	monthNum = 0
+	eps = 0.0
+	pe = 0.0
+	industryMedian = 0
+	score = 0.0
 	for index, row in Ratiodf.iterrows():
 		if row['Share'] == share:
 			try:
 				eps = float(row['Earnings Per Share'])
 				pe = currentPrice/eps
-				if pe < 10.0:
-					return 0.25
-				if pe < 15.0:
-					return 0.10
-				else:
-					return 0.0
+				year = int(row['Year'])
+				month = str(row['Month'])
+				monthNum = utils.monthToNum(row['Month'])
 			except Exception as e:
 				print e 
 				return 0.0
-	return 0.0	
+				
+	for index, row in getdfMap('PE Ratio').iterrows():
+		if (row['Industry'] == industry) and (int(row['Year']) == year) and (row['Month'] == month):
+			industryMedian = float(row['PE Ratio'])
+	
+	print 'Share ratio : '+ str(pe)+ ' | Industry median : '+str(industryMedian)+' | Ratio :PE Ratio'
+
+	if (pe < industryMedian):
+		return 0.25
+	else:
+		return 0.0	
 
 def getTrendScore(data):
 	try:
@@ -160,11 +175,11 @@ def main():
 			#give ratio median score
 			medianScore = getMedianScore(str(row['id']), str(row['Industry']))
 			print medianScore
-			epsScore = getEpsScore(str(row['id']), currentPrice)
-			print epsScore
-			total = trendScore + industryScore + medianScore + epsScore
+			peScore = getPEScore(str(row['id']), currentPrice, str(row['Industry']))
+			print peScore
+			total = trendScore + industryScore + medianScore + peScore
 			
-			print 'Trendscore: '+str(trendScore)+ '| Industry score: '+str(industryScore)+'| Median Score '+str(medianScore)+ '|EPS Score '+str(epsScore)+'| Total '+str(total) 
+			print 'Trendscore: '+str(trendScore)+ '| Industry score: '+str(industryScore)+'| Median Score '+str(medianScore)+ '|PE Score '+str(peScore)+'| Total '+str(total) 
 			
 			buyList.add(str(row['id']), total)
 		except Exception as e:
