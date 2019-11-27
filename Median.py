@@ -33,12 +33,13 @@ def main():
 		df['Return On Capital Employed(%)'] = pd.to_numeric(df['Return On Capital Employed(%)'], errors='coerce')
 		df['Net Interest Income / Total Funds'] = pd.to_numeric(df['Net Interest Income / Total Funds'], errors='coerce')
 		df['Dividend Payout Ratio Net Profit'] = pd.to_numeric(df['Dividend Payout Ratio Net Profit'], errors='coerce')
+		df['Return on Assets Excluding Revaluations'] = pd.to_numeric(df['Return on Assets Excluding Revaluations'], errors='coerce')
 		
 
 		try:
 			# Drop NA values, listing the converted columns explicitly
 			#   so NA values in other columns aren't dropped
-			df.dropna(subset = ['Net Profit Margin(%)', 'Return On Net Worth(%)', 'Return On Capital Employed(%)', 'Net Interest Income / Total Funds', 'Dividend Payout Ratio Net Profit'])
+			df.dropna(subset = ['Net Profit Margin(%)', 'Return On Net Worth(%)', 'Return On Capital Employed(%)', 'Net Interest Income / Total Funds', 'Dividend Payout Ratio Net Profit', 'Return on Assets Excluding Revaluations'])
 			df2 = df.groupby(['Industry', 'Year', 'Month'], as_index=False)[item].median()
 			df2.to_excel(str(item).replace('/','-')+'.xlsx', sheet_name=str(count))
 			print item + " done"
