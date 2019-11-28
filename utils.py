@@ -114,7 +114,10 @@ def monthToNum(month):
 	
 def normalizaScore(score, date):
 	days = getDays('2019 '+str(date), '%Y %b %d, %H:%M')
-	return score - (score*days/30.0)
+	maxDays = 20
+	if days < 20:
+		maxDays = days
+	return score - (score*maxDays/20.0)
 
 def getAlertScore(stock):
 	url = 'https://www.moneycontrol.com/news18/stocks/overview/'+str(stock)+'/N'
