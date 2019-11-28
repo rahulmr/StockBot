@@ -22,7 +22,7 @@ def main():
 	print 'Running median'
 	
 	#read list of all stock
-	ratioList = ['Net Profit Margin(%)','Return on Assets Excluding Revaluations', 'Return On Net Worth(%)', 'Return On Capital Employed(%)', 'Net Interest Income / Total Funds', 'Dividend Payout Ratio Net Profit', 'PE Ratio']
+	ratioList = ['Net Profit Margin(%)','Return on Assets Excluding Revaluations', 'Return On Net Worth(%)', 'Return On Capital Employed(%)', 'Net Interest Income / Total Funds', 'Dividend Yield', 'PE Ratio']
 	count = 0
 	
 	df = utils.readExcel('Ratios.xlsx')
@@ -32,7 +32,7 @@ def main():
 	df['Return On Net Worth(%)'] = pd.to_numeric(df['Return On Net Worth(%)'], errors='coerce')
 	df['Return On Capital Employed(%)'] = pd.to_numeric(df['Return On Capital Employed(%)'], errors='coerce')
 	df['Net Interest Income / Total Funds'] = pd.to_numeric(df['Net Interest Income / Total Funds'], errors='coerce')
-	df['Dividend Payout Ratio Net Profit'] = pd.to_numeric(df['Dividend Payout Ratio Net Profit'], errors='coerce')
+	df['Dividend Yield'] = pd.to_numeric(df['Dividend Yield'], errors='coerce')
 	df['Return on Assets Excluding Revaluations'] = pd.to_numeric(df['Return on Assets Excluding Revaluations'], errors='coerce')
 	
 	
@@ -40,7 +40,7 @@ def main():
 		try:
 			# Drop NA values, listing the converted columns explicitly
 			#   so NA values in other columns aren't dropped
-			df.dropna(subset = ['Net Profit Margin(%)', 'Return On Net Worth(%)', 'Return On Capital Employed(%)', 'Net Interest Income / Total Funds', 'Dividend Payout Ratio Net Profit', 'Return on Assets Excluding Revaluations', 'PE Ratio'])
+			df.dropna(subset = ['Net Profit Margin(%)', 'Return On Net Worth(%)', 'Return On Capital Employed(%)', 'Net Interest Income / Total Funds', 'Dividend Yield', 'Return on Assets Excluding Revaluations', 'PE Ratio'])
 			df2 = df.groupby(['Industry', 'Year', 'Month'], as_index=False)[item].median()
 			df2.to_excel(str(item).replace('/','-')+'.xlsx', sheet_name=str(count))
 			print item + " done"

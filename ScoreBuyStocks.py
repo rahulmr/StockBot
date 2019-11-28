@@ -26,7 +26,7 @@ ROAdf = utils.readExcel('Return on Assets Excluding Revaluations.xlsx')
 ROWdf = utils.readExcel('Return On Net Worth(%).xlsx')
 ROCAdf =  utils.readExcel('Return On Capital Employed(%).xlsx')
 NIdf =  utils.readExcel('Net Interest Income - Total Funds.xlsx')
-DIdf = utils.readExcel('Dividend Payout Ratio Net Profit.xlsx')
+DIdf = utils.readExcel('Dividend Yield.xlsx')
 Ratiodf = utils.readExcel('Ratios.xlsx')
 PEdf = utils.readExcel('PE Ratio.xlsx')
 buyList = my_dictionary()  
@@ -41,6 +41,7 @@ ROWEIGHT = 0.25
 IIWEIGHT = 0.25
 PEWEIGHT = 0.25
 NEWSWEIGHT = 0.25
+DYWEIGHT = 0.25
 
 
 def getdfMap(ratio):
@@ -51,7 +52,7 @@ def getdfMap(ratio):
 		'Return On Capital Employed(%)': ROCAdf,
 		'Net Interest Income / Total Funds': NIdf,
 		'Earnings Per Share':Ratiodf,
-		'Dividend Payout Ratio Net Profit':DIdf,
+		'Dividend Yield':DIdf,
 		'PE Ratio':PEdf
 }[ratio]
 

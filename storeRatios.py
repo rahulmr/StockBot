@@ -89,7 +89,8 @@ def getKey(ratio):
 		'Operating Expense / Total Funds':66,
 		'Profit Before Provisions / Total Funds':67,
 		'Net Profit / Total Funds':68,
-		'PE ratio':69
+		'PE ratio':69,
+		'Dividend Yield':70
 	}
 	return switcher.get(ratio, -1)
 
@@ -106,7 +107,7 @@ def main():
 	dataDf = pd.DataFrame(index=['id'], columns=['currentPrice', 'ratioData', 'industry'])
 
 	wb = load_workbook("Ratios.xlsx")
-	wbHeaders = ['Share', 'Industry', 'Year', 'Month','Face Value','Dividend Per Share','Operating Profit Per Share (Rs)','Net Operating Profit Per Share (Rs)','Free Reserves Per Share (Rs)', 'Bonus in Equity Capital','Operating Profit Margin(%)','Profit Before Interest And Tax Margin(%)',	'Gross Profit Margin(%)','Cash Profit Margin(%)','Adjusted Cash Margin(%)','Net Profit Margin(%)','Adjusted Net Profit Margin(%)','Return On Capital Employed(%)','Return On Net Worth(%)','Adjusted Return on Net Worth(%)','Return on Assets Excluding Revaluations','Return on Assets Including Revaluations','Return on Long Term Funds(%)','Current Ratio','Quick Ratio','Debt Equity Ratio','Long Term Debt Equity Ratio','Interest Cover','Total Debt to Owners Fund','Financial Charges Coverage Ratio','Financial Charges Coverage Ratio Post Tax','Inventory Turnover Ratio',	'Debtors Turnover Ratio','Investments Turnover Ratio', 'Fixed Assets Turnover Ratio','Total Assets Turnover Ratio','Asset Turnover Ratio', 'Average Raw Material Holding', 'Average Finished Goods Held', 'Number of Days In Working Capital','Material Cost Composition','Imported Composition of Raw Materials Consumed',	'Selling Distribution Cost Composition','Expenses as Composition of Total Sales', 'Dividend Payout Ratio Net Profit', 'Dividend Payout Ratio Cash Profit', 'Earning Retention Ratio', 'Cash Earning Retention Ratio', 'AdjustedCash Flow Times', 'Earnings Per Share', 'Book Value','Cash Deposit Ratio', 'Investment Deposit Ratio', 'Credit Deposit Ratio', 'Advances / Loans Funds(%)', 'Capital Adequacy Ratio', 'Operating Expense / Total Income', 'Other Income / Total Income', 'Interest Expended / Interest Earned', 'Interest Expended / Capital Employed(%)', 'Total Income / Capital Employed(%)', 'Interest Spread','Interest Income / Total Funds','Net Interest Income / Total Funds','Non Interest Income / Total Funds','Interest Expended / Total Funds', 'Operating Expense / Total Funds', 'Profit Before Provisions / Total Funds','Net Profit / Total Funds', 'PE Ratio']
+	wbHeaders = ['Share', 'Industry', 'Year', 'Month','Face Value','Dividend Per Share','Operating Profit Per Share (Rs)','Net Operating Profit Per Share (Rs)','Free Reserves Per Share (Rs)', 'Bonus in Equity Capital','Operating Profit Margin(%)','Profit Before Interest And Tax Margin(%)',	'Gross Profit Margin(%)','Cash Profit Margin(%)','Adjusted Cash Margin(%)','Net Profit Margin(%)','Adjusted Net Profit Margin(%)','Return On Capital Employed(%)','Return On Net Worth(%)','Adjusted Return on Net Worth(%)','Return on Assets Excluding Revaluations','Return on Assets Including Revaluations','Return on Long Term Funds(%)','Current Ratio','Quick Ratio','Debt Equity Ratio','Long Term Debt Equity Ratio','Interest Cover','Total Debt to Owners Fund','Financial Charges Coverage Ratio','Financial Charges Coverage Ratio Post Tax','Inventory Turnover Ratio',	'Debtors Turnover Ratio','Investments Turnover Ratio', 'Fixed Assets Turnover Ratio','Total Assets Turnover Ratio','Asset Turnover Ratio', 'Average Raw Material Holding', 'Average Finished Goods Held', 'Number of Days In Working Capital','Material Cost Composition','Imported Composition of Raw Materials Consumed',	'Selling Distribution Cost Composition','Expenses as Composition of Total Sales', 'Dividend Payout Ratio Net Profit', 'Dividend Payout Ratio Cash Profit', 'Earning Retention Ratio', 'Cash Earning Retention Ratio', 'AdjustedCash Flow Times', 'Earnings Per Share', 'Book Value','Cash Deposit Ratio', 'Investment Deposit Ratio', 'Credit Deposit Ratio', 'Advances / Loans Funds(%)', 'Capital Adequacy Ratio', 'Operating Expense / Total Income', 'Other Income / Total Income', 'Interest Expended / Interest Earned', 'Interest Expended / Capital Employed(%)', 'Total Income / Capital Employed(%)', 'Interest Spread','Interest Income / Total Funds','Net Interest Income / Total Funds','Non Interest Income / Total Funds','Interest Expended / Total Funds', 'Operating Expense / Total Funds', 'Profit Before Provisions / Total Funds','Net Profit / Total Funds', 'PE Ratio', 'Dividend Yield']
 	
 	
 	# Select First Worksheet
@@ -131,7 +132,7 @@ def main():
 			
 			for item in rData['company_data']['ratios']:
 			
-				row_data = [None] * 70
+				row_data = [None] * 71
 				row_data[0] = str(row['id'])
 				row_data[1] = str(row['Industry'])
 				row_data[2] = str(item['year'])
@@ -142,6 +143,9 @@ def main():
 					
 					if index == -1:
 						print str(ratio['name'])+':'+str(ratio['value'])
+					if index == 5:
+						row_data[index] = (ratio['value']).replace(',', '')
+						row_data[70] = float((ratio['value']).replace(',', ''))*100/currentPrice
 					if index == 49:
 						row_data[index] = (ratio['value']).replace(',', '')
 						row_data[69] = currentPrice/float((ratio['value']).replace(',', ''))
