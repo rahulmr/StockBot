@@ -39,7 +39,10 @@ def sendSMS(message, itemList):
 	notify = Notify()
 	notify.send(SMS)
 
-
+def saveToFile(itemList, filename):
+	with open(filename, 'w') as f:
+		for item in itemList:
+			print >> f, item
 
 def readExcel(filename):
 	df = pd.read_excel(filename, sheet_name=0, keep_default_na=False) # can also index sheet by name or fetch all sheets
@@ -47,11 +50,11 @@ def readExcel(filename):
 	return df
 
 
-def readText():
-	f = open('boughtList.txt', 'r')
+def readText(filename):
+	f = open(filename, 'r')
 	boughtList = f.readlines()
 	f.close()
-	return boughtList
+	return str(boughtList)
 
 def deleteContent(fName):
     with open(fName, "w"):
@@ -66,6 +69,12 @@ def inDayRange(time, days):
 		return 0
 	else:
 		return 1
+
+def getDays(time, format):
+	today = date.today()
+	date_object = datetime.strptime(time, format).date()
+	delta = today - date_object
+	return delta.days
 		
 #return average of value of the number of days specified
 def getAverage(data, days):
@@ -101,3 +110,27 @@ def monthToNum(month):
 		'November' : 11,
 		'December' : 12
 }[month]
+
+
+def getNewsScore(stock, message):
+	return 0
+	
+def normalizaScore(score, date):
+	days = getDays('2019 '+str(date), '%Y %b %d, %H:%M')
+	return score - (score*days/30.0)
+
+def getAlertScore(stock):
+	url = 'https://www.moneycontrol.com/news18/stocks/overview/'+str(stock)+'/N'
+	headers = {'authorization': "Basic API Key Ommitted", 'accept': "application/json", 'accept': "text/csv"}
+
+	rcomp = requests.get(url, headers=headers)
+	data = json.loads(rcomp.text)
+	scoreNews = 0.0
+	try:
+		items = data['alerts']
+		for row in items: 
+			if str(row.get('title')) == 'News':
+				scoreNews = scoreNews + normalizaScore(getNewsScore(str(stock), str(row.get('message'))), str(row.get('entdate')))		
+	except Exception as e:
+		print e
+	return scoreNews

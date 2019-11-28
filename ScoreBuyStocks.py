@@ -66,7 +66,7 @@ def getValue(share, industry, ratio):
 		if (row['Industry'] == industry) and (int(row['Year']) == year) and (row['Month'] == month):
 			industryMedian = float(row[ratio])
 	
-	print 'Share ratio : '+ str(shareMedian)+ ' | Industry median : '+str(industryMedian)+' | Ratio :'+ratio
+	#print 'Share ratio : '+ str(shareMedian)+ ' | Industry median : '+str(industryMedian)+' | Ratio :'+ratio
 
 	if (shareMedian > industryMedian):
 		return 0.25
@@ -168,15 +168,15 @@ def main():
 			
 			#give trend score
 			trendScore = getTrendScore(data)
-			print trendScore
 			#give industry change score
 			industryScore = (averageList[str(row['Industry'])] - 0.9)*(0.5 + positiveList[str(row['Industry'])])
-			print industryScore
 			#give ratio median score
 			medianScore = getMedianScore(str(row['id']), str(row['Industry']))
-			print medianScore
+			
 			peScore = getPEScore(str(row['id']), currentPrice, str(row['Industry']))
-			print peScore
+			
+			newsScore = utils.getAlertScore(str(row['id']))
+			
 			total = trendScore + industryScore + medianScore + peScore
 			
 			print 'Trendscore: '+str(trendScore)+ '| Industry score: '+str(industryScore)+'| Median Score '+str(medianScore)+ '|PE Score '+str(peScore)+'| Total '+str(total) 
@@ -187,6 +187,7 @@ def main():
 	
 	#find top buy list
 	topBuyList = dict(Counter(buyList).most_common(5))
+	utils.saveToFile(topBuyList, 'buy.txt')
 		
 	print 'Top shares to be bought are:'
 	print topBuyList

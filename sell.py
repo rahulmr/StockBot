@@ -14,8 +14,6 @@ import xlrd
 import utils
 
 
-sellList = []
-
 def getAnnualReturn(currentPrice, purchasePrice, purchaseDate):
 	ROI  = currentPrice*.995/purchasePrice
 	today = date.today()
@@ -40,7 +38,7 @@ def main():
 	#main function
 	headers = {'authorization': "Basic API Key Ommitted", 'accept': "application/json", 'accept': "text/csv"}
 	print "Running seller"
-	
+	sellList = []
 	df = utils.readExcel('boughtList.xlsx')
 	
 	for index, row in df.iterrows():
@@ -49,7 +47,7 @@ def main():
 		rcomp = requests.get(url, headers=headers)
 		data = json.loads(rcomp.text)
 		currentPrice = float(data['graph']['current_close'])
-		if shouldSell(currentPrice, float(row['Price']), datetime.strptime(row['Date'], '%d %b %Y').date()):
+		if shouldSell(currentPrice, float(row['Price']), datetime.strptime(row['Date'], '%d %b %Y').date()) and (str(row['Name']) not in utils.readText('buy.txt')):
 			sellList.append(row['Name'])
 			
 	if len(sellList) is not 0:
