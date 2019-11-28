@@ -12,6 +12,7 @@ from my_dictionary import my_dictionary
 from notify_run import Notify
 import os
 import xlrd
+import newsRun
 
 
 def upsert(dic, key):
@@ -110,10 +111,6 @@ def monthToNum(month):
 		'November' : 11,
 		'December' : 12
 }[month]
-
-
-def getNewsScore(stock, message):
-	return 0
 	
 def normalizaScore(score, date):
 	days = getDays('2019 '+str(date), '%Y %b %d, %H:%M')
@@ -130,7 +127,7 @@ def getAlertScore(stock):
 		items = data['alerts']
 		for row in items: 
 			if str(row.get('title')) == 'News':
-				scoreNews = scoreNews + normalizaScore(getNewsScore(str(stock), str(row.get('message'))), str(row.get('entdate')))		
+				scoreNews = scoreNews + normalizaScore(newsRun.getNewsScore(str(stock), str(row.get('message'))), str(row.get('entdate')))		
 	except Exception as e:
 		print e
 	return scoreNews

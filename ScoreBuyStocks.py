@@ -32,6 +32,17 @@ PEdf = utils.readExcel('PE Ratio.xlsx')
 buyList = my_dictionary()  
 topBuyList = {}
 
+TRENDWEIGHT = 0.25
+IAVGWEIGHT = 0.25
+PATWEIGHT = 0.25 
+ROAWEIGHT = 0.25
+ROCWEIGHT = 0.25
+ROWEIGHT = 0.25
+IIWEIGHT = 0.25
+PEWEIGHT = 0.25
+NEWSWEIGHT = 0.25
+
+
 def getdfMap(ratio):
 	return{
 		'Net Profit Margin(%)': PATdf,
@@ -104,7 +115,7 @@ def getPEScore(share, currentPrice, industry):
 		if (row['Industry'] == industry) and (int(row['Year']) == year) and (row['Month'] == month):
 			industryMedian = float(row['PE Ratio'])
 	
-	print 'Share ratio : '+ str(pe)+ ' | Industry median : '+str(industryMedian)+' | Ratio :PE Ratio'
+	#print 'Share ratio : '+ str(pe)+ ' | Industry median : '+str(industryMedian)+' | Ratio :PE Ratio'
 
 	if (pe < industryMedian):
 		return 0.25
@@ -175,11 +186,11 @@ def main():
 			
 			peScore = getPEScore(str(row['id']), currentPrice, str(row['Industry']))
 			
-			newsScore = utils.getAlertScore(str(row['id']))
+			newsScore = utils.getAlertScore(str(row['id'])) * NEWSWEIGHT
 			
-			total = trendScore + industryScore + medianScore + peScore
+			total = trendScore + industryScore + medianScore + peScore + newsScore
 			
-			print 'Trendscore: '+str(trendScore)+ '| Industry score: '+str(industryScore)+'| Median Score '+str(medianScore)+ '|PE Score '+str(peScore)+'| Total '+str(total) 
+			print 'Trendscore: '+str(trendScore)+ '| Industry score: '+str(industryScore)+'| Median Score '+str(medianScore)+ '|PE Score '+str(peScore)+'|News Score '+str(newsScore)+'| Total '+str(total) 
 			
 			buyList.add(str(row['id']), total)
 		except Exception as e:
