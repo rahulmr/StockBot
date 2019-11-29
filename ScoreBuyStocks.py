@@ -186,10 +186,10 @@ def main():
 			print 'Running score for '+str(row['id'])
 			
 			#give trend score
-			trendScore = getTrendScore(data) * TRENDWEIGHT
+			trendScore = getTrendScore(data) * TRENDWEIGHT * 2
 			
 			#give industry change score
-			industryScore = getAdjustedScore((averageList[str(row['Industry'])]-1.0), 0.1) * IAVGWEIGHT
+			industryScore = getAdjustedScore(averageList[str(row['Industry'])], 1.0) * IAVGWEIGHT * 10
 			
 			#give ratio median score
 			medianScore = getMedianScore(str(row['id']), str(row['Industry'])) * MEDIANWEIGHT
