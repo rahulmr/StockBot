@@ -21,10 +21,13 @@ def getAnnualReturn(currentPrice, purchasePrice, purchaseDate):
 	deltaPer = float(delta.days + 1)/365.0
 	return pow(ROI,1/deltaPer)
 
+def getReturn(currentPrice, purchasePrice, purchaseDate):
+	ROI  = currentPrice*.995/purchasePrice
+	return ROI
 
 def shouldSell(currentPrice, purchasePrice, purchaseDate):
 	#sell if annual return is more than 115%
-	if (currentPrice - purchasePrice > 5) and (getAnnualReturn(currentPrice, purchasePrice, purchaseDate) > 1.15):
+	if (currentPrice - purchasePrice > 5) and (getReturn(currentPrice, purchasePrice, purchaseDate) > 1.15):
 		return 1
 	
 	#sell if annual return is less than 90%
@@ -47,10 +50,11 @@ def main():
 		rcomp = requests.get(url, headers=headers)
 		data = json.loads(rcomp.text)
 		currentPrice = float(data['graph']['current_close'])
-		if shouldSell(currentPrice, float(row['Price']), datetime.strptime(row['Date'], '%d %b %Y').date()) and (str(row['Name']) not in utils.readText('buy.txt')):
+		if shouldSell(currentPrice, float(row['Price']), datetime.strptime(row['Date'], '%d %b %Y').date()) and (str(row['Name']) not in utils.readText('buy.txt')) and (row['Name'] not in utils.readText('sell.txt')):
 			sellList.append(row['Name'])
 			
 	if len(sellList) is not 0:
+		utils.saveToFile(sellList, 'sell.txt')
 		utils.sendSMS('sell ', sellList)
 	
 	print 'sell '+str(sellList)

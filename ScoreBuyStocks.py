@@ -32,11 +32,11 @@ DERatio = utils.readExcel('Debt Equity Ratio.xlsx')
 buyList = my_dictionary()  
 topBuyList = {}
 
-TRENDWEIGHT = 0.2
+TRENDWEIGHT = 0.35
 IAVGWEIGHT = 0.05
-MEDIANWEIGHT = 0.5
-PERATIOWEIGHT = 0.1
-NEWSWEIGHT = 0.15
+MEDIANWEIGHT = 0.35
+PERATIOWEIGHT = 0.05
+NEWSWEIGHT = 0.20
 
 
 
