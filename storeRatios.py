@@ -145,10 +145,13 @@ def main():
 						print str(ratio['name'])+':'+str(ratio['value'])
 					if index == 5:
 						row_data[index] = (ratio['value']).replace(',', '')
-						row_data[70] = float((ratio['value']).replace(',', ''))*100/currentPrice
+						row_data[70] = float((ratio['value']).replace(',', '').replace('--','0'))*100/currentPrice
 					if index == 49:
 						row_data[index] = (ratio['value']).replace(',', '')
-						row_data[69] = currentPrice/float((ratio['value']).replace(',', ''))
+						if str(ratio['value']) is not '--':
+							row_data[69] = currentPrice/float((ratio['value']).replace(',', ''))
+						else: 
+							row_data[69] = '--'
 					else:
 						row_data[index] = (ratio['value']).replace(',', '')
 

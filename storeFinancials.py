@@ -92,7 +92,7 @@ def main():
 	print 'Storing financials'
 	
 	#read list of all stock
-	df = utils.readExcel('stock-unique-dummy.xlsx')
+	df = utils.readExcel('stock-unique.xlsx')
 		
 	headers = {'authorization': "Basic API Key Ommitted", 'accept': "application/json", 'accept': "text/csv"}
 
@@ -115,7 +115,7 @@ def main():
 			ratioUrl = 'https://appfeeds.moneycontrol.com/jsonapi/stocks/finacials&format=&section=quaterly&type=standalone&scid='+str(row['id'])
 			ratioComp = requests.get(ratioUrl, headers=headers)
 			rData = json.loads(ratioComp.text)
-			
+			print 'storing for '+str(row['id'])
 			for item in rData['company_data']['result']:
 			
 				row_data = [None] * 62

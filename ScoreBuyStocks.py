@@ -19,26 +19,29 @@ from collections import defaultdict
 from time import strptime
 
 #read list of all stock
-ratioFiles = ['Net Profit Margin(%)','Return on Assets Excluding Revaluations', 'Return On Net Worth(%)', 'Return On Capital Employed(%)', 'Net Interest Income - Total Funds', 'Debt Equity Ratio']
+ratioFiles = ['Net Profit Margin(%)','Return on Assets Excluding Revaluations', 'Return On Net Worth(%)', 'Return On Capital Employed(%)', 'Total Income - Capital Employed(%)', 'Debt Equity Ratio']
+financials = ['Total Income From Operations', 'Net Profit/(Loss) For the Period']
 shareRatiodf = utils.readExcel('Ratios.xlsx')
+shareFinancialdf = utils.readExcel('Financials.xlsx')
 PATdf = utils.readExcel('Net Profit Margin(%).xlsx')
 ROAdf = utils.readExcel('Return on Assets Excluding Revaluations.xlsx')
 ROWdf = utils.readExcel('Return On Net Worth(%).xlsx')
 ROCAdf =  utils.readExcel('Return On Capital Employed(%).xlsx')
-NIdf =  utils.readExcel('Net Interest Income - Total Funds.xlsx')
+NIdf =  utils.readExcel('Total Income - Capital Employed(%).xlsx')
 DIdf = utils.readExcel('Dividend Yield.xlsx')
 PEdf = utils.readExcel('PE Ratio.xlsx')
 DERatio = utils.readExcel('Debt Equity Ratio.xlsx')
 buyList = my_dictionary()  
 topBuyList = {}
 
-TRENDWEIGHT = 0.35
+TRENDWEIGHT = 0.3
 IAVGWEIGHT = 0.05
-MEDIANWEIGHT = 0.35
+MEDIANWEIGHT = 0.3
 PERATIOWEIGHT = 0.05
-NEWSWEIGHT = 0.20
+NEWSWEIGHT = 0.1
+QUARTERWEIGHT = 0.2
 
-
+counter = 0
 
 def getdfMap(ratio):
 	return{
@@ -46,7 +49,7 @@ def getdfMap(ratio):
 		'Return on Assets Excluding Revaluations': ROAdf,
 		'Return On Net Worth(%)': ROWdf,
 		'Return On Capital Employed(%)': ROCAdf,
-		'Net Interest Income / Total Funds': NIdf,
+		'Total Income / Capital Employed(%)': NIdf,
 		'PE Ratio':PEdf,
 		'Debt Equity Ratio':DERatio
 }[ratio]
@@ -55,7 +58,7 @@ def getAdjustedScore(score, benchmark):
 	if benchmark == 0:
 		return 0
 	else:
-		gain = (score - benchmark)/benchmark
+		gain = (score - benchmark)/abs(benchmark)
 	
 		if gain > 1.0:
 			return 1.0
@@ -65,12 +68,62 @@ def getAdjustedScore(score, benchmark):
 			return gain
 
 
+def getGrowthScore(share, financial):
+	year = 0
+	monthNum = 0
+	shareFinancial = 0
+	prevShareFinancial=0
+	score = 0.0
+	for index, row in shareFinancialdf.iterrows():
+		if row['Share'] == share:
+			if int(row['Year']) > year or ((int(row['Year']) == year) and utils.monthToNum(row['Month']) > monthNum):
+				try:
+					shareFinancial = float(row[financial])
+					year = int(row['Year'])
+					month = str(row['Month'])
+					monthNum = utils.monthToNum(row['Month'])
+					break
+				except Exception as e:
+					continue
+					
+	for index, row in shareFinancialdf.iterrows():
+		if row['Share'] == share:
+			if ((int(row['Year']) == year) and utils.monthToNum(row['Month']) == (monthNum-3)) or ((int(row['Year']) == year -1) and utils.monthToNum(row['Month']) == (monthNum+9)):
+				try:
+					prevShareFinancial = float(row[financial])
+					break
+				except Exception as e:
+					print e
+					return 0
+				
+	return getAdjustedScore(shareFinancial, prevShareFinancial)						
+
+	
+	
+def getEPS(share, year, monthNum):
+	for index, row in shareFinancialdf.iterrows():
+		if row['Share'] == share:
+			if int(row['Year']) == year and utils.monthToNum(row['Month']) == monthNum:
+				try:
+					return float(row['Basic EPS'])
+				except Exception as e:
+					print e
+	return 0
+	
+def getQuarterScore(share):
+	score = 0.0
+	for item in financials:
+		score = score + getGrowthScore(share, item)
+		
+	return score
+
 def getValue(share, industry, ratio):
 	year = 0
 	monthNum = 0
 	shareMedian = 0
 	industryMedian = 0
 	score = 0.0
+	global counter
 	for index, row in shareRatiodf.iterrows():
 		if row['Share'] == share:
 			if int(row['Year']) > year or ((int(row['Year']) == year) and utils.monthToNum(row['Month']) > monthNum):
@@ -79,6 +132,7 @@ def getValue(share, industry, ratio):
 					year = int(row['Year'])
 					month = str(row['Month'])
 					monthNum = utils.monthToNum(row['Month'])
+					counter = counter + 1
 				except Exception as e:
 					print e
 					continue
@@ -97,10 +151,12 @@ def getValue(share, industry, ratio):
 
 def getMedianScore(share, industry):
 	score = 0.0
+	global counter
+	counter = 0
 	for item in ratioFiles:
 		score = score + getValue(share, industry, str(item).replace('-','/'))
-	
-	return score/5.0
+	print 'counter is '+str(counter)
+	return score/counter
 	
 def getPEScore(share, currentPrice, industry):
 	year = 0
@@ -113,7 +169,7 @@ def getPEScore(share, currentPrice, industry):
 		if row['Share'] == share:
 			if int(row['Year']) > year or ((int(row['Year']) == year) and utils.monthToNum(row['Month']) > monthNum):	
 				try:
-					eps = float(row['Earnings Per Share'])
+					eps = getEPS(share, int(row['Year']), utils.monthToNum(row['Month']))
 					pe = currentPrice/eps
 					year = int(row['Year'])
 					month = str(row['Month'])
@@ -194,13 +250,15 @@ def main():
 			#give ratio median score
 			medianScore = getMedianScore(str(row['id']), str(row['Industry'])) * MEDIANWEIGHT
 			
+			quarterScore = getQuarterScore(str(row['id']))*QUARTERWEIGHT
+			
 			peScore = getPEScore(str(row['id']), currentPrice, str(row['Industry']))*PERATIOWEIGHT
 			
 			newsScore = utils.getAlertScore(str(row['id'])) * NEWSWEIGHT
 			
-			total = trendScore + industryScore + medianScore + peScore + newsScore
+			total = trendScore + industryScore + medianScore + peScore + newsScore + quarterScore
 			
-			print 'Trendscore: '+str(trendScore)+ '| Industry score: '+str(industryScore)+'| Median Score '+str(medianScore)+ '|PE Score '+str(peScore)+'|News Score '+str(newsScore)+'| Total '+str(total) 
+			print 'Trendscore: '+str(trendScore)+ '| Industry score: '+str(industryScore)+'| Median Score '+str(medianScore)+ '|PE Score '+str(peScore)+'|News Score '+str(newsScore)+'|Quarter score '+str(quarterScore)+'| Total '+str(total) 
 			
 			buyList.add(str(row['id']), total)
 		except Exception as e:
