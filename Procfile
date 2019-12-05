@@ -1,2 +1,2 @@
+myworker: python MovingAverage.py
 clock: python clock.py
-clock: python clock2.py
