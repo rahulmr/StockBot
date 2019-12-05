@@ -25,13 +25,13 @@ def getReturn(currentPrice, purchasePrice, purchaseDate):
 	ROI  = currentPrice*.995/purchasePrice
 	return ROI
 
-def shouldSell(currentPrice, purchasePrice, purchaseDate):
+def shouldSell(currentPrice, purchasePrice, purchaseDate, quantity):
 	#sell if annual return is more than 115%
-	if (currentPrice - purchasePrice > 5) and (getReturn(currentPrice, purchasePrice, purchaseDate) > 1.15):
+	if ((currentPrice - purchasePrice)*quantity > 550.0):
 		return 1
 	
 	#sell if annual return is less than 90%
-	if (purchasePrice - currentPrice > 5) and (getAnnualReturn(currentPrice, purchasePrice, purchaseDate) < 0.9) and (currentPrice > 50.0):
+	if (purchasePrice - currentPrice > 5) and (getReturn(currentPrice, purchasePrice, purchaseDate) < 0.9) and (currentPrice > 50.0):
 		return 1
 	
 	return 0
@@ -50,7 +50,7 @@ def main():
 		rcomp = requests.get(url, headers=headers)
 		data = json.loads(rcomp.text)
 		currentPrice = float(data['graph']['current_close'])
-		if shouldSell(currentPrice, float(row['Price']), datetime.strptime(row['Date'], '%d %b %Y').date()) and (str(row['Name']) not in utils.readText('buy.txt')) and (row['Name'] not in utils.readText('sell.txt')):
+		if shouldSell(currentPrice, float(row['Price']), datetime.strptime(row['Date'], '%d %b %Y').date(), int(row['Qty'])) and (str(row['Name']) not in utils.readText('buy.txt')) and (row['Name'] not in utils.readText('sell.txt')):
 			sellList.append(row['Name'])
 			
 	if len(sellList) is not 0:

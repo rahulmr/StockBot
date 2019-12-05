@@ -169,7 +169,7 @@ def getPEScore(share, currentPrice, industry):
 		if row['Share'] == share:
 			if int(row['Year']) > year or ((int(row['Year']) == year) and utils.monthToNum(row['Month']) > monthNum):	
 				try:
-					eps = getEPS(share, int(row['Year']), utils.monthToNum(row['Month']))
+					eps = float(row['Earnings Per Share'])
 					pe = currentPrice/eps
 					year = int(row['Year'])
 					month = str(row['Month'])
