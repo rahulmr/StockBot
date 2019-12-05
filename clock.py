@@ -13,9 +13,7 @@ sched = BlockingScheduler()
 
 
 @sched.scheduled_job('interval', minutes=10)
-def timed_job():
-	sell.main()
-	print('This job is run every ten minutes.')
+
 
 #@sched.scheduled_job('cron', day_of_week='mon-fri', hour=4, minute=55)
 #def scheduled_job():
@@ -23,10 +21,10 @@ def timed_job():
 #	print 'This job is run every weekday at 10:25 am.'
 
 
-@sched.scheduled_job('cron', day_of_week='mon-fri', hour=4, minute=00)
+@sched.scheduled_job('cron', day_of_week='mon-fri', hour=4, minute=45)
 def scheduled_job1():
 	ScoreBuyStocks.main()
-	print 'This job is run every weekday at 9:30 am IST.'
+	print 'This job is run every weekday at 10:15 am IST.'
 	
 @sched.scheduled_job('cron', day_of_week='mon-fri', hour=22, minute=30)
 def scheduled_job2():
@@ -37,11 +35,6 @@ def scheduled_job2():
 def scheduled_job3():
 	storeRatios.main()
 	print 'This job is run every weekday at 22:30.'
-	
-@sched.scheduled_job('cron', day_of_week='mon-fri', hour=12, minute=30)
-def scheduled_job3():
-	storeFinancials.main()
-	print 'This job is run every weekday at 18:00.'
 	
 @sched.scheduled_job('cron', day_of_week='mon-fri', hour=22, minute=00)
 def scheduled_job4():
