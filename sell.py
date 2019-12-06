@@ -50,7 +50,7 @@ def main():
 		rcomp = requests.get(url, headers=headers)
 		data = json.loads(rcomp.text)
 		currentPrice = float(data['graph']['current_close'])
-		if shouldSell(currentPrice, float(row['Price']), datetime.strptime(row['Date'], '%d %b %Y').date(), int(row['Qty'])) and (str(row['Name']) not in utils.readText('buy.txt')) and (row['Name'] not in utils.readText('sell.txt')):
+		if shouldSell(currentPrice, float(row['Price']), datetime.strptime(row['Date'], '%d %b %Y').date(), int(row['Qty'])) and (row['Name'] not in utils.readText('buy.txt')) and (row['Name'] not in utils.readText('sell.txt')):
 			sellList.append(row['Name'])
 			
 	if len(sellList) is not 0:

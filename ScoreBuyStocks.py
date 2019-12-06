@@ -31,7 +31,9 @@ NIdf =  utils.readExcel('Total Income - Capital Employed(%).xlsx')
 DIdf = utils.readExcel('Dividend Yield.xlsx')
 PEdf = utils.readExcel('PE Ratio.xlsx')
 DERatio = utils.readExcel('Debt Equity Ratio.xlsx')
-buyList = my_dictionary()  
+buyList = my_dictionary()
+trendMap = my_dictionary()
+priceMap = my_dictionary()
 topBuyList = {}
 
 TRENDWEIGHT = 0.3
@@ -93,7 +95,6 @@ def getGrowthScore(share, financial):
 					prevShareFinancial = float(row[financial])
 					break
 				except Exception as e:
-					print e
 					return 0
 				
 	return getAdjustedScore(shareFinancial, prevShareFinancial)						
@@ -107,14 +108,13 @@ def getEPS(share, year, monthNum):
 				try:
 					return float(row['Basic EPS'])
 				except Exception as e:
-					print e
+					return 0
 	return 0
 	
 def getQuarterScore(share):
 	score = 0.0
 	for item in financials:
 		score = score + getGrowthScore(share, item)
-		
 	return score
 
 def getValue(share, industry, ratio):
@@ -134,19 +134,16 @@ def getValue(share, industry, ratio):
 					monthNum = utils.monthToNum(row['Month'])
 					counter = counter + 1
 				except Exception as e:
-					print e
 					continue
 	
 	for index, row in getdfMap(ratio).iterrows():
 		if (row['Industry'] == industry) and (int(row['Year']) == year) and (row['Month'] == month):
 			industryMedian = float(row[ratio])
 	
-	#print 'Share ratio : '+ str(shareMedian)+ ' | Industry median : '+str(industryMedian)+' | Ratio :'+ratio
 	adjustedScore = getAdjustedScore(shareMedian, industryMedian)		
 	
 	if ratio=='Debt Equity Ratio':
 		adjustedScore = adjustedScore*-1
-	#print adjustedScore
 	return adjustedScore
 
 def getMedianScore(share, industry):
@@ -155,7 +152,6 @@ def getMedianScore(share, industry):
 	counter = 0
 	for item in ratioFiles:
 		score = score + getValue(share, industry, str(item).replace('-','/'))
-	print 'counter is '+str(counter)
 	return score/counter
 	
 def getPEScore(share, currentPrice, industry):
@@ -175,15 +171,13 @@ def getPEScore(share, currentPrice, industry):
 					month = str(row['Month'])
 					monthNum = utils.monthToNum(row['Month'])
 				except Exception as e:
-					print e
+					#print e
 					continue
 				
 	for index, row in getdfMap('PE Ratio').iterrows():
 		if (row['Industry'] == industry) and (int(row['Year']) == year) and (row['Month'] == month):
 			industryMedian = float(row['PE Ratio'])
 	
-	#print 'Share ratio : '+ str(pe)+ ' | Industry median : '+str(industryMedian)+' | Ratio :PE Ratio'
-
 	return -1.0 * getAdjustedScore(pe, industryMedian)
 	
 
@@ -192,11 +186,9 @@ def getTrendScore(data):
 		avg200 = utils.getAverage(data['graph']['values'], 200)
 		avg50 = utils.getAverage(data['graph']['values'], 50)
 		currentPrice = float(data['graph']['current_close'])
-		#print '200d price is '+str(avg200)+' | current price is '+str(currentPrice)+' | 50d avg is '+str(avg50)
-	
+		
 		return getAdjustedScore(avg50, avg200)
 	except Exception as e:
-		print e
 		return 0
 
 def main():
@@ -209,14 +201,25 @@ def main():
 	averageList = my_dictionary()
 	countList = my_dictionary()
 	positiveList = my_dictionary()
+	count = 0.0
+	#totalStock = 60.0
+	totalStock = 2508.0
 	
 	#iterate every stock
 	for index, row in df.iterrows():
 		try:
+			#utils.drawProgressBar(count/totalStock, 50)
+			utils.loadingBar(count, totalStock, 10)
+			
+			count = count + 1
 			#runtime calculate change average and percentage of stocks on the rise
 			url = 'https://appfeeds.moneycontrol.com//jsonapi//stocks//graph&format=json&range=max&type=area&ex=&sc_id='+str(row['id'])
 			rcomp = requests.get(url, headers=headers)
 			data = json.loads(rcomp.text)
+			trendScore = getTrendScore(data) * TRENDWEIGHT * 2
+			trendMap.add(str(row['id']), trendScore)
+			priceMap.add(str(row['id']), float(data['graph']['current_close']))
+			#stockData.add(str(row['id']), data)
 			currentPrice = float(data['graph']['current_close'])
 			prevPrice = float(data['graph']['prev_close'])
 			change  = currentPrice/prevPrice
@@ -226,6 +229,8 @@ def main():
 				positiveList = utils.upsertAverage(positiveList, str(row['Industry']), 1, countList[str(row['Industry'])])
 			else:
 				positiveList = utils.upsertAverage(positiveList, str(row['Industry']), 0, countList[str(row['Industry'])])
+			
+			
 		except Exception as e:
 			print str(e)+' '+str(row['id'])
 			
@@ -233,16 +238,13 @@ def main():
 	#iterate every stock
 	for index, row in df.iterrows():
 		try:
-			#runtime calculate change average and percentage of stocks on the rise
-			url = 'https://appfeeds.moneycontrol.com//jsonapi//stocks//graph&format=json&range=max&type=area&ex=&sc_id='+str(row['id'])
-			rcomp = requests.get(url, headers=headers)
-			data = json.loads(rcomp.text)
-			currentPrice = float(data['graph']['current_close'])
-		
-			print 'Running score for '+str(row['id'])
-			
+			#utils.drawProgressBar(count/totalStock, 50)
+			utils.loadingBar(count, totalStock, 10)
+			count = count + 1
+			currentPrice = priceMap[str(row['id'])]
+	
 			#give trend score
-			trendScore = getTrendScore(data) * TRENDWEIGHT * 2
+			trendScore = trendMap[str(row['id'])]
 			
 			#give industry change score
 			industryScore = getAdjustedScore(averageList[str(row['Industry'])], 1.0) * IAVGWEIGHT * 10
@@ -258,11 +260,12 @@ def main():
 			
 			total = trendScore + industryScore + medianScore + peScore + newsScore + quarterScore
 			
-			print 'Trendscore: '+str(trendScore)+ '| Industry score: '+str(industryScore)+'| Median Score '+str(medianScore)+ '|PE Score '+str(peScore)+'|News Score '+str(newsScore)+'|Quarter score '+str(quarterScore)+'| Total '+str(total) 
+			#print 'Trendscore: '+str(trendScore)+ '| Industry score: '+str(industryScore)+'| Median Score '+str(medianScore)+ '|PE Score '+str(peScore)+'|News Score '+str(newsScore)+'|Quarter score '+str(quarterScore)+'| Total '+str(total) 
 			
 			buyList.add(str(row['id']), total)
 		except Exception as e:
 			print e
+			continue
 	
 	#find top buy list
 	topBuyList = dict(Counter(buyList).most_common(5))

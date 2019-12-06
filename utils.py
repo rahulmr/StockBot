@@ -13,6 +13,24 @@ from notify_run import Notify
 import os
 import xlrd
 import newsRun
+import sys
+
+def loadingBar(count,total,size):
+	percent = float(count)/float(total)*100
+	print str(int(count)).rjust(3,'0')+"/"+str(int(total)).rjust(3,'0') + ' [' + '='*int(percent/10)*size + ' '*(10-int(percent/10))*size + ']'
+
+def drawProgressBar(percent, barLen = 20):
+	#os.system("notify-run configure -f https://notify.run/hRtUrGQaxEM0l3VR")
+	#sys.stdout.write("\r")
+    os.system("\r")
+    progress = ""
+    for i in range(barLen):
+        if i < int(barLen * percent):
+            progress += "="
+        else:
+            progress += " "
+    os.system("[ %s ] %.2f%%" % (progress, percent * 100))
+    sys.stdout.flush()
 
 
 def upsert(dic, key):
