@@ -14,6 +14,12 @@ import os
 import xlrd
 import newsRun
 import sys
+import smtplib,ssl
+from email.mime.multipart import MIMEMultipart
+from email.mime.base import MIMEBase
+from email.mime.text import MIMEText
+from email.utils import formatdate
+from email import encoders
 
 def loadingBar(count,total,size):
 	percent = float(count)/float(total)*100
@@ -129,6 +135,29 @@ def monthToNum(month):
 		'November' : 11,
 		'December' : 12
 }[month]
+
+def send_mail(send_from,send_to,subject,text,files,server,port,username='',password='',isTls=True):
+    msg = MIMEMultipart()
+    msg['From'] = send_from
+    msg['To'] = send_to
+    msg['Date'] = formatdate(localtime = True)
+    msg['Subject'] = subject
+    msg.attach(MIMEText(text))
+
+    part = MIMEBase('application', "octet-stream")
+    part.set_payload(open("Scores.xlsx", "rb").read())
+    encoders.encode_base64(part)
+    part.add_header('Content-Disposition', 'attachment; filename="Scores.xlsx"')
+    msg.attach(part)
+
+    #context = ssl.SSLContext(ssl.PROTOCOL_SSLv3)
+    #SSL connection only working on Python 3+
+    smtp = smtplib.SMTP(server, port)
+    if isTls:
+        smtp.starttls()
+    smtp.login(username,password)
+    smtp.sendmail(send_from, send_to, msg.as_string())
+    smtp.quit()
 	
 def normalizaScore(score, date):
 	days = getDays('2019 '+str(date), '%Y %b %d, %H:%M')

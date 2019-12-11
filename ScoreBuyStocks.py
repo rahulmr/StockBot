@@ -204,7 +204,13 @@ def main():
 	count = 0.0
 	#totalStock = 60.0
 	totalStock = 2508.0
-	
+	wb = load_workbook("Scores.xlsx")
+	wbHeaders = ['Share', 'Industry', 'Trend', 'Average', 'Median', 'PE', 'News', 'Quarter', 'Total']
+	wb.remove(wb.worksheets[0])
+	wb.create_sheet('Scores', 0)
+	ws = wb.worksheets[0]
+
+	ws.append(wbHeaders)
 	#iterate every stock
 	for index, row in df.iterrows():
 		try:
@@ -237,44 +243,55 @@ def main():
 		
 	#iterate every stock
 	for index, row in df.iterrows():
-		try:
+		#try:
 			#utils.drawProgressBar(count/totalStock, 50)
 			utils.loadingBar(count, totalStock, 10)
 			count = count + 1
 			currentPrice = priceMap[str(row['id'])]
-	
+			row_data = [None] * 9
+			row_data[0] = str(row['id'])
+			row_data[1] = str(row['Industry'])
+			
 			#give trend score
 			trendScore = trendMap[str(row['id'])]
+			row_data[2] = str(trendScore)
 			
 			#give industry change score
 			industryScore = getAdjustedScore(averageList[str(row['Industry'])], 1.0) * IAVGWEIGHT * 10
-			
+			row_data[3] = str(industryScore)
+	
 			#give ratio median score
 			medianScore = getMedianScore(str(row['id']), str(row['Industry'])) * MEDIANWEIGHT
-			
+			row_data[4] = str(medianScore)
+	
 			quarterScore = getQuarterScore(str(row['id']))*QUARTERWEIGHT
+			row_data[7] = str(quarterScore)
 			
 			peScore = getPEScore(str(row['id']), currentPrice, str(row['Industry']))*PERATIOWEIGHT
+			row_data[5] = str(peScore)
 			
 			newsScore = utils.getAlertScore(str(row['id'])) * NEWSWEIGHT
+			row_data[6] = str(newsScore)
 			
 			total = trendScore + industryScore + medianScore + peScore + newsScore + quarterScore
-			
+			row_data[8] = str(total)
+			ws.append(row_data)
 			#print 'Trendscore: '+str(trendScore)+ '| Industry score: '+str(industryScore)+'| Median Score '+str(medianScore)+ '|PE Score '+str(peScore)+'|News Score '+str(newsScore)+'|Quarter score '+str(quarterScore)+'| Total '+str(total) 
 			
 			buyList.add(str(row['id']), total)
-		except Exception as e:
-			print e
-			continue
+		#except Exception as e:
+			#print e
+			#continue
 	
 	#find top buy list
 	topBuyList = dict(Counter(buyList).most_common(5))
 	utils.saveToFile(topBuyList, 'buy.txt')
-		
+	wb.save("Scores.xlsx")
 	print 'Top shares to be bought are:'
 	print topBuyList
 	
-	utils.sendSMS('buy ', topBuyList)
+	#utils.sendSMS('buy ', topBuyList)
+	utils.send_mail('sukrit.raghuvanshi1990@gmail.com','sukrit.raghuvanshi1990@gmail.com','Scores','PFA','Scores.xlsx','smtp.gmail.com',587,'sukrit.raghuvanshi1990','Crashing@1',True)
 
 if __name__ == "__main__":
     main()
