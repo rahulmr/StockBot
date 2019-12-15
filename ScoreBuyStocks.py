@@ -243,7 +243,7 @@ def main():
 		
 	#iterate every stock
 	for index, row in df.iterrows():
-		#try:
+		try:
 			#utils.drawProgressBar(count/totalStock, 50)
 			utils.loadingBar(count, totalStock, 10)
 			count = count + 1
@@ -279,9 +279,9 @@ def main():
 			#print 'Trendscore: '+str(trendScore)+ '| Industry score: '+str(industryScore)+'| Median Score '+str(medianScore)+ '|PE Score '+str(peScore)+'|News Score '+str(newsScore)+'|Quarter score '+str(quarterScore)+'| Total '+str(total) 
 			
 			buyList.add(str(row['id']), total)
-		#except Exception as e:
-			#print e
-			#continue
+		except Exception as e:
+			print e
+			continue
 	
 	#find top buy list
 	topBuyList = dict(Counter(buyList).most_common(5))
@@ -290,7 +290,7 @@ def main():
 	print 'Top shares to be bought are:'
 	print topBuyList
 	
-	#utils.sendSMS('buy ', topBuyList)
+	utils.sendSMS('buy ', topBuyList)
 	utils.send_mail('sukrit.raghuvanshi1990@gmail.com','sukrit.raghuvanshi1990@gmail.com','Scores','PFA','Scores.xlsx','smtp.gmail.com',587,'sukrit.raghuvanshi1990','Crashing@1',True)
 
 if __name__ == "__main__":
