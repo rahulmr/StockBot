@@ -291,7 +291,10 @@ def main():
 	print topBuyList
 	
 	utils.sendSMS('buy ', topBuyList)
-	utils.send_mail('sukrit.raghuvanshi1990@gmail.com','sukrit.raghuvanshi1990@gmail.com','Scores','PFA','Scores.xlsx','smtp.gmail.com',587,'sukrit.raghuvanshi1990','Crashing@1',True)
+	try:
+		utils.send_mail('sukrit.raghuvanshi1990@gmail.com','sukrit.raghuvanshi1990@gmail.com','Scores','PFA','Scores.xlsx','smtp.gmail.com',587,'sukrit.raghuvanshi1990','Crashing@1',True)
+	except Exception as e:
+		print e
 
 if __name__ == "__main__":
     main()

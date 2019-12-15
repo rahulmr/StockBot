@@ -35,10 +35,10 @@ def scheduled_job3():
 #	ScoreBuyStocks.main()
 #	print 'This job is run every weekday at 19:00 pm IST.'
 	
-@sched.scheduled_job('cron', day_of_week='mon-sun', hour=9, minute=10)
+@sched.scheduled_job('cron', day_of_week='mon-sun', hour=22, minute=00)
 def scheduled_job2():
 	ScoreBuyStocks.main()
-	print 'This job is run every weekday at 02:35 pm.'
+	print 'This job is run every weekday at 03:30 am.'
 	
 @sched.scheduled_job('cron', day_of_week='mon-sun', hour=17, minute=00)
 def scheduled_job3():
