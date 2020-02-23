@@ -75,11 +75,13 @@ def readExcel(filename):
 	return df
 
 
-def readText(filename):
-	f = open(filename, 'r')
-	boughtList = f.readlines()
-	f.close()
-	return str(boughtList)
+def readText(fileName):
+	#f = open(filename, 'r')
+	#boughtList = f.readlines()
+	#f.close()
+	#return str(boughtList)
+	lineList = [line.rstrip('\n') for line in open(fileName)]
+	return lineList
 
 def deleteContent(fName):
     with open(fName, "w"):
